@@ -8,4 +8,5 @@ import com.saskenhp.entity.Patient;
 @Repository
 public interface PatientRepo extends JpaRepository<Patient, Integer> {
 
+	public void update(Patient pat);
 }
