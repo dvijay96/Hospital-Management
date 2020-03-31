@@ -8,4 +8,5 @@ import com.saskenhp.entity.Appointment;
 @Repository
 public interface AppointmentRepo extends JpaRepository<Appointment, Integer> {
 
+	public void update(Appointment appt);
 }

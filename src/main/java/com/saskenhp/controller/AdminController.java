@@ -80,6 +80,7 @@ public class AdminController {
 	public ResponseEntity<List<Employee>> doctorsList() {
 		return new ResponseEntity<List<Employee>>(repo.findAllDoctors("DOC"), HttpStatus.FOUND);
 	}
-	
-	//Receptionist's control
+
+	// Receptionist's control
+
 }
