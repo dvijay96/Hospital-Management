@@ -2,7 +2,7 @@ package com.saskenhp.requesturls;
 
 public interface DoctorsReq {
 
-	String reqUrl = "doctor/secured/rest";
+	String reqUrl = "secured/doctor/rest";
 
 	String listAppts = "hp/ApptsList/{id}";
 

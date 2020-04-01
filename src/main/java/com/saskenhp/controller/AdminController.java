@@ -31,9 +31,6 @@ public class AdminController {
 	@Autowired
 	private EmployeeRepo repo;
 
-//	@Autowired
-//	private RoleRepo roleRepo;
-
 	@Autowired
 	private PatientRepo patRepo;
 
@@ -83,10 +80,8 @@ public class AdminController {
 	public ResponseEntity<?> deleteDoctor(@PathVariable int id) {
 
 		Employee emp = repo.findById(id).get();
-		Doctor doc=docRepo.findById(id).get();
+		Doctor doc = docRepo.findById(id).get();
 		if (emp != null) {
-//			Role role = emp.getRole();
-//			roleRepo.delete(role);
 			docRepo.delete(doc);
 			repo.delete(emp);
 			return new ResponseEntity<String>("Doctor " + id + " deleted", HttpStatus.OK);
