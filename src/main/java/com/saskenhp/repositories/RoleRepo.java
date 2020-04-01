@@ -8,5 +8,4 @@ import com.saskenhp.entity.Role;
 @Repository
 public interface RoleRepo extends JpaRepository<Role, Integer> {
 
-	public void update(Role role);
 }

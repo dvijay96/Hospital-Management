@@ -15,10 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.saskenhp.entity.Employee;
+import com.saskenhp.entity.Patient;
 import com.saskenhp.entity.Role;
 import com.saskenhp.mappings.Admin;
-import com.saskenhp.repositories.AppointmentRepo;
 import com.saskenhp.repositories.EmployeeRepo;
+import com.saskenhp.repositories.PatientRepo;
 import com.saskenhp.repositories.RoleRepo;
 
 @RestController
@@ -32,10 +33,10 @@ public class AdminController {
 	private RoleRepo roleRepo;
 
 	@Autowired
-	private AppointmentRepo apptRepo;
+	private PatientRepo patRepo;
 
 	@PostMapping(Admin.addEmp)
-	public ResponseEntity<Employee> addAdmin(@RequestBody Employee emp) {
+	public ResponseEntity<Employee> addEmployee(@RequestBody Employee emp) {
 		try {
 			repo.save(emp);
 			return new ResponseEntity<>(emp, HttpStatus.CREATED);
@@ -44,18 +45,18 @@ public class AdminController {
 		}
 	}
 
-	@PutMapping(Admin.editDoc)
+	@PutMapping(Admin.editEmp)
 	public ResponseEntity<Employee> editDoctor(@RequestBody Employee emp) {
-		return addAdmin(emp);
+		return addEmployee(emp);
 	}
 
-	@DeleteMapping(Admin.deleteDoc)
+	@DeleteMapping(Admin.deleteEmp)
 	public ResponseEntity<?> deleteDoctor(@PathVariable int id) {
 
 		Employee emp = repo.findById(id).get();
 		if (emp != null) {
-			Role role = emp.getRole();
-			roleRepo.delete(role);
+//			Role role = emp.getRole();
+//			roleRepo.delete(role);
 			repo.delete(emp);
 			return new ResponseEntity<String>("Doctor " + id + " deleted", HttpStatus.OK);
 		}
@@ -64,13 +65,13 @@ public class AdminController {
 
 	@GetMapping(Admin.docByName)
 	public ResponseEntity<Employee> findDoctor(@PathVariable String name) {
-		Employee emp = repo.findByName(name);
+		Employee emp = repo.findByName(name, "DOC");
 		if (emp != null)
 			return new ResponseEntity<Employee>(emp, HttpStatus.FOUND);
 		return new ResponseEntity<Employee>(emp, HttpStatus.NOT_FOUND);
 	}
 
-	@GetMapping("/getall")
+	@GetMapping(Admin.listAll)
 	public ResponseEntity<List<Employee>> getAll() {
 		return new ResponseEntity<List<Employee>>(repo.findAll(), HttpStatus.FOUND);
 
@@ -78,9 +79,60 @@ public class AdminController {
 
 	@GetMapping(Admin.listDoc)
 	public ResponseEntity<List<Employee>> doctorsList() {
-		return new ResponseEntity<List<Employee>>(repo.findAllDoctors("DOC"), HttpStatus.FOUND);
+		return new ResponseEntity<List<Employee>>(repo.findAll("DOC"), HttpStatus.FOUND);
 	}
 
 	// Receptionist's control
 
+	@GetMapping(Admin.listRecp)
+	public ResponseEntity<List<Employee>> recepList() {
+		return new ResponseEntity<List<Employee>>(repo.findAll("RECEP"), HttpStatus.FOUND);
+	}
+
+	@GetMapping(Admin.recpByName)
+	public ResponseEntity<Employee> getRecepByName(@PathVariable String name) {
+		return new ResponseEntity<Employee>(repo.findByName(name, "RECEP"), HttpStatus.FOUND);
+	}
+
+	// Patient control
+
+	@PostMapping(Admin.addPatient)
+	public ResponseEntity<Patient> addPatient(@RequestBody Patient p) {
+		try {
+			patRepo.save(p);
+			return new ResponseEntity<Patient>(p, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<Patient>(HttpStatus.CONFLICT);
+		}
+	}
+
+	@PutMapping(Admin.editPatient)
+	public String editPatient(@RequestBody Patient p) {
+		try {
+			patRepo.save(p);
+			return p.getPatientName() + " edited sucessfully";
+		} catch (Exception e) {
+			return "Wrong details conflict";
+		}
+	}
+
+	@DeleteMapping(Admin.deletePatient)
+	public String deletePatient(@PathVariable int id) {
+		Patient p = patRepo.findById(id).get();
+		patRepo.delete(p);
+		return p.getPatientName() + " deleted";
+	}
+
+	@GetMapping(Admin.patientByName)
+	public ResponseEntity<?> getPatient(@PathVariable String name) {
+		Patient p = patRepo.findByName(name);
+		if (p != null)
+			return new ResponseEntity<Patient>(p, HttpStatus.FOUND);
+		return new ResponseEntity<String>("Patient doesn't exists", HttpStatus.NOT_FOUND);
+	}
+
+	@GetMapping(Admin.listPatient)
+	public ResponseEntity<List<Patient>> patientsList() {
+		return new ResponseEntity<List<Patient>>(patRepo.findAll(), HttpStatus.FOUND);
+	}
 }

@@ -11,10 +11,10 @@ import com.saskenhp.entity.Employee;
 @Repository
 public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
 
-	@Query("FROM Employee WHERE firstName=?1")
-	public Employee findByName(String firstName);
-
-	@Query("FROM Employee e inner join e.role r where r.role=:role")
-	public List<Employee> findAllDoctors(String role);
+	@Query("FROM Employee e inner join e.role r WHERE e.firstName=:firstName and r.role=:role")
+	public Employee findByName(String firstName,String role);
+	
+	@Query("From Employee e inner join e.role r where r.role=:role")
+	public List<Employee> findAll(String role);
 
 }

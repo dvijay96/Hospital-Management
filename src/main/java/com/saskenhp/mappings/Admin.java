@@ -2,20 +2,30 @@ package com.saskenhp.mappings;
 
 public interface Admin {
 
-	String reqURL = "/admin/secured/rest";
+	String reqURL = "/secured/admin/rest";
 
-	String addEmp="/hp/addEmp";
-	
-	String editDoc = "/hp/editDoc";
-	String deleteDoc = "/hp/deleteDoc/{id}";
+	String addEmp = "/hp/addEmp";
+
+	String editEmp = "/hp/editEmp";
+
+	String deleteEmp = "/hp/deleteEmp/{id}";
+
+	String listAll = "/hp/getall";
+
+	// DOCTOR Service
+
 	String docByName = "hp/doc/{name}";
+
 	String listDoc = "/hp/allDocs";
 
-	String editRecp = "hp/recp/edit";
-	String deleteRecp = "hp/recp/delete/{id}";
-	String recpByName = "hp/recp/{name}";
-	String listRecp = "hp/resp/all";
+	// RECEP Service
 
+	String recpByName = "hp/recp/{name}";
+	String listRecp = "hp/recp/all";
+
+	// Patient Service
+
+	String addPatient = "/hp/addPatient";
 	String editPatient = "hp/patient/edit";
 	String deletePatient = "hp/patient/delete/{id}";
 	String patientByName = "hp/patient/{name}";
