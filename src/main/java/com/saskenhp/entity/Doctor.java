@@ -67,4 +67,9 @@ public class Doctor {
 		this.patients = patients;
 	}
 
+	@Override
+	public String toString() {
+		return "Doctor [docId=" + docId + ", \nfirstName=" + firstName + "]";
+	}
+
 }

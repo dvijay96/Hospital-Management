@@ -1,6 +1,7 @@
 package com.saskenhp.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,30 +43,31 @@ public class AdminController {
 	@PostMapping(Admin.addEmp)
 	public ResponseEntity<Employee> addEmployee(@RequestBody Employee emp) {
 		try {
+			repo.saveAndFlush(emp);
+			int id = emp.getEmpId();
 
 			Role role = emp.getRole();
 
 			if (role.getRole().equals("DOC")) {
 
-				Doctor doc = docRepo.findById(emp.getEmpId()).get();
-
-				if (doc == null) {
-					doc = new Doctor();
-					doc.setDocId(emp.getEmpId());
-					doc.setFirstName(emp.getFirstName());
-					doc.setLastName(emp.getLastName());
-
-				} else {
+				Doctor doc;
+				try {
+					doc = docRepo.findById(id).get();
 
 					if (!doc.getFirstName().equals(emp.getFirstName())) {
 						doc.setFirstName(emp.getFirstName());
 					} else if (!doc.getLastName().equals(emp.getLastName())) {
 						doc.setLastName(emp.getLastName());
 					}
+				} catch (NoSuchElementException ex) {
+
+					doc = new Doctor();
+					doc.setDocId(emp.getEmpId());
+					doc.setFirstName(emp.getFirstName());
+					doc.setLastName(emp.getLastName());
 				}
 				docRepo.save(doc);
 			}
-			repo.save(emp);
 			return new ResponseEntity<>(emp, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(emp, HttpStatus.CONFLICT);
@@ -81,9 +83,11 @@ public class AdminController {
 	public ResponseEntity<?> deleteDoctor(@PathVariable int id) {
 
 		Employee emp = repo.findById(id).get();
+		Doctor doc=docRepo.findById(id).get();
 		if (emp != null) {
 //			Role role = emp.getRole();
 //			roleRepo.delete(role);
+			docRepo.delete(doc);
 			repo.delete(emp);
 			return new ResponseEntity<String>("Doctor " + id + " deleted", HttpStatus.OK);
 		}
