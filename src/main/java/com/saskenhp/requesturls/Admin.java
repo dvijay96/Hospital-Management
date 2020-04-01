@@ -1,4 +1,4 @@
-package com.saskenhp.mappings;
+package com.saskenhp.requesturls;
 
 public interface Admin {
 

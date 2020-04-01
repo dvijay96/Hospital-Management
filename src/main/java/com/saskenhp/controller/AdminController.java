@@ -14,13 +14,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.saskenhp.entity.Doctor;
 import com.saskenhp.entity.Employee;
 import com.saskenhp.entity.Patient;
 import com.saskenhp.entity.Role;
-import com.saskenhp.mappings.Admin;
+import com.saskenhp.repositories.DoctorRepo;
 import com.saskenhp.repositories.EmployeeRepo;
 import com.saskenhp.repositories.PatientRepo;
-import com.saskenhp.repositories.RoleRepo;
+import com.saskenhp.requesturls.Admin;
 
 @RestController
 @RequestMapping(Admin.reqURL)
@@ -29,15 +30,41 @@ public class AdminController {
 	@Autowired
 	private EmployeeRepo repo;
 
-	@Autowired
-	private RoleRepo roleRepo;
+//	@Autowired
+//	private RoleRepo roleRepo;
 
 	@Autowired
 	private PatientRepo patRepo;
 
+	@Autowired
+	private DoctorRepo docRepo;
+
 	@PostMapping(Admin.addEmp)
 	public ResponseEntity<Employee> addEmployee(@RequestBody Employee emp) {
 		try {
+
+			Role role = emp.getRole();
+
+			if (role.getRole().equals("DOC")) {
+
+				Doctor doc = docRepo.findById(emp.getEmpId()).get();
+
+				if (doc == null) {
+					doc = new Doctor();
+					doc.setDocId(emp.getEmpId());
+					doc.setFirstName(emp.getFirstName());
+					doc.setLastName(emp.getLastName());
+
+				} else {
+
+					if (!doc.getFirstName().equals(emp.getFirstName())) {
+						doc.setFirstName(emp.getFirstName());
+					} else if (!doc.getLastName().equals(emp.getLastName())) {
+						doc.setLastName(emp.getLastName());
+					}
+				}
+				docRepo.save(doc);
+			}
 			repo.save(emp);
 			return new ResponseEntity<>(emp, HttpStatus.CREATED);
 		} catch (Exception e) {

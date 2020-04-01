@@ -1,13 +1,13 @@
-package com.saskenhp.mappings;
+package com.saskenhp.requesturls;
 
-public interface Receptionists {
+public interface Recep {
 
 	String reqUrl = "/recep/secured/rest";
 
 	String addPatient = "/hp/patient/add";
 	String editPatient = "hp/patient/edit";
 	String deletePatient = "hp/patient/delete";
-	String patientByName = "hp/patient/{name}";
+	String patientById = "hp/patient/{id}";
 	String listPatient = "hp/patient/all";
 
 	String addAppt = "/hp/Appt/add";
@@ -15,5 +15,4 @@ public interface Receptionists {
 	String deleteAppt = "hp/Appt/delete";
 	String ApptOfDoc = "hp/Appt/{name}";
 	String listAppts = "hp/Appt/all";
-
 }
